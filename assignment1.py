@@ -122,24 +122,24 @@ def is_sorted(arr: StaticArray) -> int:
     ascending = True
     descending = True
 
-    # Use arr.length() instead of len(arr)
+    # Iterate over the array to determine if it's ascending or descending
     for i in range(arr.length() - 1):
         if arr[i] < arr[i + 1]:
-            descending = False
+            descending = False  # Found a case where a later element is greater
         elif arr[i] > arr[i + 1]:
-            ascending = False
+            ascending = False   # Found a case where a later element is smaller
 
         # Early exit if array is neither ascending nor descending
         if not ascending and not descending:
             return 0
 
+    # Check and return the appropriate code based on the flags
     if ascending:
         return 1
-
     if descending:
         return -1
+    return 0  # If neither, return 0
 
-    return 0
     pass
 
 
@@ -218,13 +218,14 @@ def count_sort(arr: StaticArray) -> StaticArray:
         if arr[i] < min_val:
             min_val = arr[i]
 
-    # Create the 'count array' for the range of input array values
+    # Initialize the 'count array' (as a tuple) for the range of input array values
     range_of_values = max_val - min_val + 1
-    count_array = [0] * range_of_values
+    count_array = tuple(0 for _ in range(range_of_values))
 
     # Populate the count array
     for i in range(arr.length()):
-        count_array[arr[i] - min_val] += 1
+        index = arr[i] - min_val
+        count_array = count_array[:index] + (count_array[index] + 1,) + count_array[index + 1:]
 
     # Create the sorted array in non-ascending order
     sorted_arr = StaticArray(arr.length())
@@ -233,7 +234,7 @@ def count_sort(arr: StaticArray) -> StaticArray:
         while count_array[i] > 0:
             sorted_arr[sorted_index] = i + min_val
             sorted_index += 1
-            count_array[i] -= 1
+            count_array = count_array[:i] + (count_array[i] - 1,) + count_array[i + 1:]
 
     return sorted_arr
     pass
