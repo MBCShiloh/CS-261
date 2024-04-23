@@ -118,27 +118,23 @@ def sa_range(start: int, end: int) -> StaticArray:
 # ------------------- PROBLEM 6 - IS_SORTED ---------------------------------
 
 def is_sorted(arr: StaticArray) -> int:
-    # Assume both ascending and descending to start with
-    ascending = True
-    descending = True
+    # Assume both non-descending and non-ascending to start with
+    non_descending = True
+    non_ascending = True
 
-    # Iterate over the array to determine if it's ascending or descending
+    # Iterate over the array to determine if it's non-descending or non-ascending
     for i in range(arr.length() - 1):
+        if arr[i] > arr[i + 1]:
+            non_descending = False  # Found a case where a later element is smaller
         if arr[i] < arr[i + 1]:
-            descending = False  # Found a case where a later element is greater
-        elif arr[i] > arr[i + 1]:
-            ascending = False   # Found a case where a later element is smaller
-
-        # Early exit if array is neither ascending nor descending
-        if not ascending and not descending:
-            return 0
+            non_ascending = False   # Found a case where a later element is greater
 
     # Check and return the appropriate code based on the flags
-    if ascending:
+    if non_descending:
         return 1
-    if descending:
+    if non_ascending:
         return -1
-    return 0  # If neither, return 0
+    return 0  # If neither non-descending nor non-ascending, return 0
 
     pass
 
