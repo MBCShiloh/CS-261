@@ -188,10 +188,11 @@ class DynamicArray:
         # Nullify the dangling reference at the old last position
         self._data[self._size] = None
 
-        # Resize only if the size is less than half the capacity and more than the minimum size
-        # Resize condition is adjusted for aggressive shrinkage to meet test expectations
-        if self._size < self._capacity // 2 and self._capacity > 4:
-            new_capacity = max(4, 2 * self._size)
+        # Resize only if the size is significantly smaller than the capacity
+        # Adjust the resizing policy: Only resize if the size is less than 1/4 of the capacity
+        if self._size < self._capacity // 4 and self._capacity > 8:
+            # More conservative resizing strategy
+            new_capacity = max(8, self._capacity // 2)
             self.resize(new_capacity)
 
     def slice(self, start_index: int, size: int) -> 'DynamicArray':
