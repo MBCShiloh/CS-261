@@ -176,24 +176,28 @@ class DynamicArray:
         self._size += 1
 
     def remove_at_index(self, index: int) -> None:
-        if index < 0 or index >= self._size:
-            raise DynamicArrayException("Index out of valid range")
+        """Remove the value at a specified index in the DynamicArray. The currently existing values will shift one value
+        to the left. If the DynamicArray's current size is less than a quarter of the capacity, then the method will
+        resize the DynamicArray's capacity in response.
+        """
 
-        # Shift elements to fill the gap left by the removed element
-        for i in range(index, self._size - 1):
-            self._data[i] = self._data[i + 1]
+        # Check for invalid index
+        if not 0 <= index < self._size:
+            raise DynamicArrayException
 
-        # Decrement size after removal
-        self._size -= 1
-        # Nullify the dangling reference at the old last position
-        self._data[self._size] = None
-
-        # Resize only if the size is significantly smaller than the capacity
-        # Adjust the resizing policy: Only resize if the size is less than 1/4 of the capacity
-        if self._size < self._capacity // 4 and self._capacity > 8:
-            # More conservative resizing strategy
-            new_capacity = max(8, self._capacity // 2)
+        # Determine if resizing is necessary and execute if conditions are met
+        capacity_quarter = self._capacity // 4
+        if self._size <= capacity_quarter and self._capacity > 10:
+            new_capacity = max(10, self._capacity // 2)
             self.resize(new_capacity)
+
+        # Shift elements left from the removal point
+        for shift_index in range(index, self._size - 1):
+            moved_item = self.get_at_index(shift_index + 1)
+            self.set_at_index(shift_index, moved_item)
+
+        # Decrement size after the removal
+        self._size -= 1
 
     def slice(self, start_index: int, size: int) -> 'DynamicArray':
         if start_index < 0 or start_index >= self._size or size < 0 or start_index + size > self._size:
