@@ -73,7 +73,6 @@ class Bag:
         """
         Clears the contents of the dynamic array.
         """
-
         self._da.resize(0)
 
     def equal(self, second_bag: 'Bag') -> bool:
@@ -81,30 +80,24 @@ class Bag:
         Compares the contents of a bag with the contents of a second bag.
         Returns True if the bags are equal, otherwise False.
         """
-        # If the bags have different lengths, they can't be equal
         if self._da.length() != second_bag._da.length():
             return False
 
-        # Create a copy of the second bag's data to mark visited elements
-        visited = DynamicArray([False] * second_bag._da.length())
+        visited = DynamicArray()
+        for _ in range(second_bag._da.length()):
+            visited.append(False)
 
-        # Iterate over each element in the first bag
         for i in range(self._da.length()):
             found = False
-            # Iterate over each element in the second bag
             for j in range(second_bag._da.length()):
-                # If the element is found in the second bag and it's not visited yet, mark it as visited
-                if self._da.get_at_index(i) == second_bag._da.get_at_index(j) and not visited[j]:
-                    visited[j] = True
+                if self._da.get_at_index(i) == second_bag._da.get_at_index(j) and not visited.get_at_index(j):
+                    visited.set_at_index(j, True)
                     found = True
                     break
-
             if not found:
                 return False
 
-
         return True
-
 
     def __iter__(self):
         self._index = 0
@@ -118,6 +111,7 @@ class Bag:
             return value
         else:
             raise StopIteration
+
 
 
 
