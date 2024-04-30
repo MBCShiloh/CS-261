@@ -1,9 +1,9 @@
-# Name:
-# OSU Email:
+# Name: Mark Bastion-Cavnar
+# OSU Email: bastionm@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment 2: Dynamic Array and ADT Implementation
+# Due Date: 4/26/2024
+# Description: This is a BAG ADT that uses classes from DynamicArray for the underlying storage of the bag data.
 
 
 from dynamic_array import *
@@ -17,8 +17,6 @@ class Bag:
         """
         self._da = DynamicArray()
 
-        # populate bag with initial values (if provided)
-        # before using this feature, implement add() method
         if start_bag is not None:
             for value in start_bag:
                 self.add(value)
@@ -44,45 +42,83 @@ class Bag:
 
     def add(self, value: object) -> None:
         """
-        TODO: Write this implementation
+        Add a new element to the bag. It is implemented with O(1) amortized
+        runtime complexity by utilizing the 'append' method of the DynamicArray.
         """
-        pass
+        self._da.append(value)
 
     def remove(self, value: object) -> bool:
         """
-        TODO: Write this implementation
+        Remove any one element from the bag that matches the provided value object.
+        Return True if some object was actually removed from the bag, False otherwise.
+        Implemented with O(N) runtime complexity.
         """
-        pass
+        for index in range(self._da.length()):
+            if self._da.get_at_index(index) == value:
+                self._da.remove_at_index(index)  # Use the provided method
+                return True
+        return False
 
     def count(self, value: object) -> int:
         """
-        TODO: Write this implementation
+        Count occurrences of value in the dynamic array.
         """
-        pass
+        count = 0
+        for index in range(self._da.length()):
+            if self._da.get_at_index(index) == value:
+                count += 1
+        return count
 
     def clear(self) -> None:
         """
-        TODO: Write this implementation
+        Clears the contents of the dynamic array.
         """
-        pass
 
-    def equal(self, second_bag: "Bag") -> bool:
+        self._da.resize(0)
+
+    def equal(self, second_bag: 'Bag') -> bool:
         """
-        TODO: Write this implementation
+        Compares the contents of a bag with the contents of a second bag.
+        Returns True if the bags are equal, otherwise False.
         """
-        pass
+        # If the bags have different lengths, they can't be equal
+        if self._da.length() != second_bag._da.length():
+            return False
+
+        # Create a copy of the second bag's data to mark visited elements
+        visited = DynamicArray([False] * second_bag._da.length())
+
+        # Iterate over each element in the first bag
+        for i in range(self._da.length()):
+            found = False
+            # Iterate over each element in the second bag
+            for j in range(second_bag._da.length()):
+                # If the element is found in the second bag and it's not visited yet, mark it as visited
+                if self._da.get_at_index(i) == second_bag._da.get_at_index(j) and not visited[j]:
+                    visited[j] = True
+                    found = True
+                    break
+
+            if not found:
+                return False
+
+
+        return True
+
 
     def __iter__(self):
-        """
-        TODO: Write this implementation
-        """
-        pass
+        self._index = 0
+        return self
+
 
     def __next__(self):
-        """
-        TODO: Write this implementation
-        """
-        pass
+        if self._index < self._da.length():
+            value = self._da.get_at_index(self._index)
+            self._index += 1
+            return value
+        else:
+            raise StopIteration
+
 
 
 # ------------------- BASIC TESTING -----------------------------------------
