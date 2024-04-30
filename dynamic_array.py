@@ -3,7 +3,7 @@
 # Course: CS261 - Data Structures
 # Assignment 2: Dynamic Array and ADT Implementation
 # Due Date: 4/29/2024
-# Description: This is a DynamicArray that includes a variety of methods that can be leveraged ensure that changes (resize, insert, remove, append) can be done in a dynamic way. 
+# Description:This is a DynamicArray that includes a variety of methods that can be leveraged ensure that changes (resize, insert, remove, append) can be done in a dynamic way.
 
 
 from static_array import StaticArray
@@ -236,20 +236,17 @@ class DynamicArray:
         accumulator, otherwise, use the first value in the array. If the array is empty,
         return the initializer or None if not provided.
         """
-        iterator = iter(self)
+        # Check if the array is empty
+        if self._size == 0:
+            return initializer
 
-        # If initializer is provided, use it, otherwise, use the first element
-        if initializer is not None:
-            accumulator = initializer
-        else:
-            try:
-                accumulator = next(iterator)
-            except StopIteration:  # The array is empty
-                return initializer
+        # Set the initial accumulator
+        accumulator = initializer if initializer is not None else self._data[0]
 
-        # Apply the reduce function to the rest of the elements
-        for element in iterator:
-            accumulator = reduce_func(accumulator, element)
+        # Start iterating from the second element if initializer is not provided
+        start_index = 1 if initializer is None else 0
+        for i in range(start_index, self._size):
+            accumulator = reduce_func(accumulator, self._data[i])
 
         return accumulator
 
