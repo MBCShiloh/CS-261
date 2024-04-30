@@ -293,6 +293,7 @@ def find_mode(arr: DynamicArray) -> tuple[DynamicArray, int]:
     if arr.is_empty():
         return DynamicArray(), 0
 
+
     mode_array = DynamicArray()
     mode_value = arr.get_at_index(0)
     mode_frequency = 1
@@ -308,18 +309,21 @@ def find_mode(arr: DynamicArray) -> tuple[DynamicArray, int]:
                 mode_array = DynamicArray()
                 mode_array.append(mode_value)
             elif current_frequency == mode_frequency:
-                mode_array.append(arr.get_at_index(index - 1))
+                if mode_array.is_empty() or arr.get_at_index(index - 1) != mode_array.get_at_index(mode_array.length() - 1):
+                    mode_array.append(arr.get_at_index(index - 1))
             current_frequency = 1
 
+    # Check the last element group
     if current_frequency > mode_frequency:
-        mode_array = DynamicArray()
+        mode_array = DynamicArray()  #
         mode_array.append(arr.get_at_index(arr.length() - 1))
         mode_frequency = current_frequency
     elif current_frequency == mode_frequency:
-        if not mode_array.is_empty() and arr.get_at_index(arr.length() - 1) != mode_array.get_at_index(mode_array.length() - 1):
+        if mode_array.is_empty() or arr.get_at_index(arr.length() - 1) != mode_array.get_at_index(mode_array.length() - 1):
             mode_array.append(arr.get_at_index(arr.length() - 1))
 
     return mode_array, mode_frequency
+
 
 
 # ------------------- BASIC TESTING -----------------------------------------
