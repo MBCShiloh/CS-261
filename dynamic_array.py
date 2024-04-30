@@ -176,22 +176,22 @@ class DynamicArray:
         self._size += 1
 
     def remove_at_index(self, index: int) -> None:
-        if index < 0 or index >= self._size:
-            raise DynamicArrayException("Index out of valid range")
+    if index < 0 or index >= self._size:
+        raise DynamicArrayException("Index out of valid range")
 
-        # Move elements to fill the gap
-        for i in range(index, self._size - 1):
-            self._data[i] = self._data[i + 1]
+    # Move elements to fill the gap
+    for i in range(index, self._size - 1):
+        self._data[i] = self._data[i + 1]
 
-        # Decrement size after removal
-        self._size -= 1
-        self._data[self._size] = None  # Clean up the dangling reference at the end
+    # Decrement size after removal
+    self._size -= 1
+    self._data[self._size] = None  # Clean up the dangling reference at the end
 
-        # Check and potentially adjust capacity after removal
-        if self._size < self._capacity // 4 and self._capacity > 4:
-            new_capacity = max(4, self._capacity // 2)
-            if self._size > 8:  
-                self.resize(new_capacity)
+    # More aggressive resizing
+    if self._size < self._capacity // 2 and self._capacity > 4:
+        # New capacity should not be less than double the current size unless it is less than the minimum capacity
+        new_capacity = max(4, 2 * self._size)
+        self.resize(new_capacity)
 
     def slice(self, start_index: int, size: int) -> 'DynamicArray':
         if start_index < 0 or start_index >= self._size or size < 0 or start_index + size > self._size:
