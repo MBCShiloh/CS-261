@@ -176,25 +176,25 @@ class DynamicArray:
         self._size += 1
 
     def remove_at_index(self, index: int) -> None:
-        """Remove the value at a specified index in the DynamicArray. The currently existing values will shift one value
+        """
+        Remove the value at a specified index in the DynamicArray. The currently existing values will shift one value
         to the left. If the DynamicArray's current size is less than a quarter of the capacity, then the method will
         resize the DynamicArray's capacity in response.
         """
 
         # Check for invalid index
-        if not 0 <= index < self._size:
+        if index < 0 or index >= self.length():
             raise DynamicArrayException
 
         # Determine if resizing is necessary and execute if conditions are met
-        capacity_quarter = self._capacity // 4
-        if self._size <= capacity_quarter and self._capacity > 10:
-            new_capacity = max(10, self._capacity // 2)
+        if self.length() * 4 <= self.get_capacity() and self.get_capacity() // 2 >= 10:
+            new_capacity = max(10, self.get_capacity() // 2)
             self.resize(new_capacity)
 
         # Shift elements left from the removal point
-        for shift_index in range(index, self._size - 1):
-            moved_item = self.get_at_index(shift_index + 1)
-            self.set_at_index(shift_index, moved_item)
+        for shift_index in range(index, self.length() - 1):
+            next_value = self.get_at_index(shift_index + 1)
+            self.set_at_index(shift_index, next_value)
 
         # Decrement size after the removal
         self._size -= 1
