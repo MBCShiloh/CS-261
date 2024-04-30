@@ -190,7 +190,8 @@ class DynamicArray:
         # Check and potentially adjust capacity after removal
         if self._size < self._capacity // 4 and self._capacity > 4:
             new_capacity = max(4, self._capacity // 2)
-            self.resize(new_capacity)
+            if self._size > 8:  
+                self.resize(new_capacity)
 
     def slice(self, start_index: int, size: int) -> 'DynamicArray':
         if start_index < 0 or start_index >= self._size or size < 0 or start_index + size > self._size:
