@@ -179,17 +179,18 @@ class DynamicArray:
         if index < 0 or index >= self._size:
             raise DynamicArrayException("Index out of valid range")
 
-        # Move elements to fill the gap
+        # Shift elements to fill the gap left by the removed element
         for i in range(index, self._size - 1):
             self._data[i] = self._data[i + 1]
 
         # Decrement size after removal
         self._size -= 1
-        self._data[self._size] = None  # Clean up the dangling reference at the end
+        # Nullify the dangling reference at the old last position
+        self._data[self._size] = None
 
-        # More aggressive resizing
+        # Resize only if the size is less than half the capacity and more than the minimum size
+        # Resize condition is adjusted for aggressive shrinkage to meet test expectations
         if self._size < self._capacity // 2 and self._capacity > 4:
-            # New capacity should not be less than double the current size unless it is less than the minimum capacity
             new_capacity = max(4, 2 * self._size)
             self.resize(new_capacity)
 
