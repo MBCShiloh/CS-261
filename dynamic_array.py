@@ -262,32 +262,26 @@ def chunk(arr: DynamicArray) -> DynamicArray:
     Split a DynamicArray into multiple DynamicArrays, each containing a non-descending subsequence of values.
     The function operates in O(N) complexity, where N is the number of elements in the input array.
     Each chunk is then stored as an element in a new DynamicArray.
-
-    :param arr: a DynamicArray of comparable items (numbers or strings)
-    :return: a DynamicArray of DynamicArrays, each containing a non-descending subsequence from the original array
     """
-
     if arr.length() <= 1:
-        return DynamicArray([arr])
+        result = DynamicArray()
+        if arr.length() == 1:
+            single_element_chunk = DynamicArray()
+            single_element_chunk.append(arr.get_at_index(0))
+            result.append(single_element_chunk)
+        return result
 
-    # Create a new DynamicArray to hold the chunks
     chunked = DynamicArray()
     current_chunk = DynamicArray()
-
-    # Add the first value to the current chunk
     current_chunk.append(arr.get_at_index(0))
 
-    # Iterate through the original array
     for i in range(1, arr.length()):
-        # If the current element is not less than the previous, append it to the current chunk
         if arr.get_at_index(i) >= arr.get_at_index(i - 1):
             current_chunk.append(arr.get_at_index(i))
         else:
-            # Otherwise, append the current chunk to the chunked array and start a new chunk
             chunked.append(current_chunk)
             current_chunk = DynamicArray()
             current_chunk.append(arr.get_at_index(i))
-
 
     if current_chunk.length() > 0:
         chunked.append(current_chunk)
@@ -304,29 +298,25 @@ def find_mode(arr: DynamicArray) -> tuple[DynamicArray, int]:
     mode_frequency = 1
     current_frequency = 1
 
-    # Iterate through the array to find the mode value
     for index in range(1, arr.length()):
         if arr.get_at_index(index) == arr.get_at_index(index - 1):
             current_frequency += 1
         else:
+            if current_frequency > mode_frequency:
+                mode_value = arr.get_at_index(index - 1)
+                mode_frequency = current_frequency
+                mode_array = DynamicArray()
+                mode_array.append(mode_value)
+            elif current_frequency == mode_frequency:
+                mode_array.append(arr.get_at_index(index - 1))
             current_frequency = 1
 
-        # If the current frequency is greater than the mode frequency,
-        # update the mode and its frequency
-        if current_frequency > mode_frequency:
-            mode_value = arr.get_at_index(index - 1)
-            mode_frequency = current_frequency
-            mode_array = DynamicArray([mode_value])
-        elif current_frequency == mode_frequency:
-            # If the current value has the same frequency as the mode,
-            # it is also a mode, so add it to the mode array
-            if arr.get_at_index(index - 1) != mode_value:
-                mode_value = arr.get_at_index(index - 1)
-                mode_array.append(mode_value)
-
-    # Check the last element
-    if current_frequency == mode_frequency:
-        if arr.get_at_index(arr.length() - 1) != mode_value:
+    if current_frequency > mode_frequency:
+        mode_array = DynamicArray()
+        mode_array.append(arr.get_at_index(arr.length() - 1))
+        mode_frequency = current_frequency
+    elif current_frequency == mode_frequency:
+        if not mode_array.is_empty() and arr.get_at_index(arr.length() - 1) != mode_array.get_at_index(mode_array.length() - 1):
             mode_array.append(arr.get_at_index(arr.length() - 1))
 
     return mode_array, mode_frequency
