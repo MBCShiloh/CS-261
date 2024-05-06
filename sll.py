@@ -1,9 +1,9 @@
-# Name:
-# OSU Email:
+# Name: Mark Bastion-Cavnar
+# OSU Email:bastionm@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment: 3
+# Due Date:5/6/2024
+# Description:Linked List and ADT Implementation
 
 
 from SLNode import *
@@ -69,51 +69,115 @@ class LinkedList:
 
     def insert_front(self, value: object) -> None:
         """
-        TODO: Write this implementation
+        This method adds a new node at the beginning of the list (right after the front sentinel). It
+        must be implemented with O(1) runtime complexity.
         """
-        pass
+        new_node = SLNode(value)  # Create a new node with the given value
+        new_node.next = self._head.next  # Set the next of the new node to the current first node
+        self._head.next = new_node  # Update the next of the head to point to the new node
 
     def insert_back(self, value: object) -> None:
         """
-        TODO: Write this implementation
+        This method adds a new node at the end of the list. It must be implemented with O(1) runtime
+        complexity when the last node is accessible directly (i.e., when _tail attribute is included in
+        the LinkedList implementation), or O(N) runtime complexity when the last node is not
+        accessible directly.
         """
-        pass
+        new_node = SLNode(value)  # Create a new node with the given value
+        current = self._head  # Start from the head node
+        while current.next:  # Iterate until the last node
+            current = current.next
+        current.next = new_node  # Set the next of the last node to the new node
 
     def insert_at_index(self, index: int, value: object) -> None:
         """
-        TODO: Write this implementation
+        This method adds a new node at a specific index in the list. Index 0 refers to the beginning of
+        the list (right after the front sentinel). If the specified index is invalid, this method must raise
+        a custom “SLLException”.
         """
-        pass
+        if index < 0 or index > self.length():
+            raise SLLException("Invalid index")
+        if index == 0:
+            self.insert_front(value)
+            return
+        new_node = SLNode(value)  # Create a new node with the given value
+        current = self._head
+        for i in range(index):
+            current = current.next
+        new_node.next = current.next
+        current.next = new_node
 
     def remove_at_index(self, index: int) -> None:
         """
-        TODO: Write this implementation
+        This method removes the node at a specific index in the list. Index 0 refers to the beginning of
+        the list (right after the front sentinel). If the specified index is invalid, this method must raise
+        a custom “SLLException”.
         """
-        pass
+        if index < 0 or index >= self.length():
+            raise SLLException("Invalid index")
+        current = self._head
+        for i in range(index):
+            current = current.next
+        current.next = current.next.next
 
     def remove(self, value: object) -> bool:
         """
-        TODO: Write this implementation
+        This method traverses the list from the beginning to the end, and removes the first node that
+        matches the provided value. The method returns True if a node was removed from the list.
+        Otherwise, it returns False. It must be implemented with O(N) runtime complexity.
         """
-        pass
+        current = self._head
+        while current.next:
+            if current.next.value == value:
+                current.next = current.next.next
+                return True
+            current = current.next
+        return False
 
     def count(self, value: object) -> int:
         """
-        TODO: Write this implementation
+        This method counts the number of elements in the list that match the provided value. The
+        method then returns this number. It must be implemented with O(N) runtime complexity.
         """
-        pass
+        count = 0
+        current = self._head.next
+        while current:
+            if current.value == value:
+                count += 1
+            current = current.next
+        return count
 
     def find(self, value: object) -> bool:
         """
-        TODO: Write this implementation
+        This method returns a Boolean value based on whether or not the provided value exists in the
+        list. It must be implemented with O(N) runtime complexity.
         """
-        pass
+        current = self._head.next
+        while current:
+            if current.value == value:
+                return True
+            current = current.next
+        return False
 
     def slice(self, start_index: int, size: int) -> "LinkedList":
         """
-        TODO: Write this implementation
+        This method returns a new LinkedList that contains the requested number of nodes from the
+        original list, starting with the node located at the requested start index. If the original list
+        contains N nodes, a valid start_index is in range [0, N - 1] inclusive. The original list
+        cannot be modified. The runtime complexity of your implementation must be O(N).
         """
-        pass
+        if start_index < 0 or start_index >= self.length():
+            raise SLLException("Invalid start index")
+        current = self._head.next
+        for i in range(start_index):
+            current = current.next
+        new_list = LinkedList()
+        for i in range(size):
+            if current is None:
+                raise SLLException("Not enough nodes to make a slice")
+            new_list.insert_back(current.value)
+            current = current.next
+        return new_list
 
 
 if __name__ == "__main__":
