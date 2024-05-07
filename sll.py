@@ -163,20 +163,24 @@ class LinkedList:
         """
         This method returns a new LinkedList that contains the requested number of nodes from the
         original list, starting with the node located at the requested start index. If the original list
-        contains N nodes, a valid start_index is in range [0, N - 1] inclusive. The original list
-        cannot be modified. The runtime complexity of your implementation must be O(N).
+        contains N nodes, a valid start_index is in range [0, N - 1] inclusive. The runtime complexity of the implementation must be O(N).
         """
         if start_index < 0 or start_index >= self.length():
             raise SLLException("Invalid start index")
+        if size < 0:
+            raise SLLException("Invalid size: size cannot be negative")
+
         current = self._head.next
         for i in range(start_index):
             current = current.next
+
         new_list = LinkedList()
         for i in range(size):
             if current is None:
                 raise SLLException("Not enough nodes to make a slice")
             new_list.insert_back(current.value)
             current = current.next
+
         return new_list
 
 
