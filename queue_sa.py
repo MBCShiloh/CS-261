@@ -1,9 +1,9 @@
-# Name:
-# OSU Email:
+# Name: Mark Bastion-Cavnar
+# OSU Email:bastionm@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment: 3
+# Due Date:5/6/2024
+# Description:Linked List and ADT Implementation
 
 
 # Note: Changing any part of the pre-implemented methods (besides adding  #
@@ -89,30 +89,50 @@ class Queue:
 
     def enqueue(self, value: object) -> None:
         """
-        TODO: Write this implementation
+        Adds a new value to the end of the queue.
         """
-        pass
+        if self._size == self._sa.size():  # If the queue is full, resize
+            self._double_queue()
+        self._sa[self._back] = value
+        self._back = (self._back + 1) % self._sa.size()  # Update back pointer
+        self._size += 1
+
 
     def dequeue(self) -> object:
         """
-        TODO: Write this implementation
+        Removes and returns the value at the beginning of the queue.
         """
-        pass
+        if self.is_empty():
+            raise QueueException("Queue is empty")
+        value = self._sa[self._front]
+        self._front = (self._front + 1) % self._sa.size()  # Update front pointer
+        self._size -= 1
+        return value
+
 
     def front(self) -> object:
         """
-        TODO: Write this implementation
+        Returns the value of the front element of the queue without removing it.
         """
-        pass
+        if self.is_empty():
+            raise QueueException("Queue is empty")
+        return self._sa[self._front]
+
 
     # The method below is optional, but recommended, to implement. #
     # You may alter it in any way you see fit.                     #
 
     def _double_queue(self) -> None:
         """
-        TODO: Write this implementation
+        Doubles the capacity of the queue.
         """
-        pass
+        new_capacity = 2 * self._sa.size()
+        new_sa = StaticArray(new_capacity)
+        for i in range(self._size):
+            new_sa[i] = self._sa[(self._front + i) % self._sa.size()]
+        self._sa = new_sa
+        self._front = 0
+        self._back = self._size
 
 
 # ------------------- BASIC TESTING -----------------------------------------
