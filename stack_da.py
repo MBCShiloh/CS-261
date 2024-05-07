@@ -1,9 +1,9 @@
-# Name:
-# OSU Email:
+# Name: Mark Bastion-Cavnar
+# OSU Email:bastionm@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment: 3
+# Due Date:5/6/2024
+# Description:Linked List and ADT Implementation
 
 
 from dynamic_array import *
@@ -52,21 +52,27 @@ class Stack:
 
     def push(self, value: object) -> None:
         """
-        TODO: Write this implementation
+        Add a new element to the top of the stack.
         """
-        pass
+        self._da.append(value)
+
 
     def pop(self) -> object:
         """
-        TODO: Write this implementation
+        Remove the top element from the stack and return its value.
         """
-        pass
+        if self._da.is_empty():
+            raise StackException("Stack is empty")
+        return self._da.pop()
 
     def top(self) -> object:
         """
-        TODO: Write this implementation
+        Return the value of the top element of the stack without removing it.
         """
-        pass
+        if self._da.is_empty():
+            raise StackException("Stack is empty")
+        return self._da[self._da.length() - 1]
+
 
 
 # ------------------- BASIC TESTING -----------------------------------------
