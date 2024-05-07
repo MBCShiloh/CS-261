@@ -56,23 +56,25 @@ class Stack:
         """
         self._da.append(value)
 
-
     def pop(self) -> object:
         """
         Remove the top element from the stack and return its value.
+        Raise StackException if the stack is empty.
         """
         if self._da.is_empty():
             raise StackException("Stack is empty")
-        return self._da.pop()
+        value = self._da[self._da.length() - 1]
+        self._da.remove_at_index(self._da.length() - 1)
+        return value
 
     def top(self) -> object:
         """
         Return the value of the top element of the stack without removing it.
+        Raise StackException if the stack is empty.
         """
         if self._da.is_empty():
             raise StackException("Stack is empty")
-        return self._da[self._da.length() - 1]
-
+        return self._da[self._da.length() - 1]  
 
 
 # ------------------- BASIC TESTING -----------------------------------------
