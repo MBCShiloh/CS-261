@@ -125,13 +125,13 @@ class Queue:
         """
         Doubles the capacity of the queue.
         """
-        new_capacity = 2 * self._sa._size
+        new_capacity = 2 * self._sa.length()  # Use length() instead of _size
         new_sa = StaticArray(new_capacity)
         for i in range(self._current_size):
-            new_sa[i] = self._sa[(self._front + i) % self._sa._size]
+            new_sa[i] = self._sa[(self._front + i) % self._sa.length()]
         self._sa = new_sa
         self._front = 0
-        self._back = self._current_size
+        self._back = self._current_size - 1  # Correct the _back index
 
 
 # ------------------- BASIC TESTING -----------------------------------------
