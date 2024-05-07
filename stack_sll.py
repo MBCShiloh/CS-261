@@ -62,21 +62,27 @@ class Stack:
     # -----------------------------------------------------------------------
 
     def push(self, value: object) -> None:
+        """Adds a new element to the top of the stack with O(1) runtime complexity."""
         new_node = SLNode(value)
         new_node.next = self._head
         self._head = new_node
 
+
     def pop(self) -> object:
+        """Removes the top element from the stack and returns its value. Raises StackException if the stack is empty. O(1) runtime complexity."""
         if self.is_empty():
             raise StackException("Stack is empty")
         value = self._head.value
         self._head = self._head.next
         return value
 
+
     def top(self) -> object:
+        """Returns the value of the top element of the stack without removing it. Raises StackException if the stack is empty. O(1) runtime complexity."""
         if self.is_empty():
             raise StackException("Stack is empty")
         return self._head.value
+
 
 
 # ------------------- BASIC TESTING -----------------------------------------
