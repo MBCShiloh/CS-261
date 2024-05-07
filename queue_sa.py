@@ -91,12 +91,11 @@ class Queue:
         """
         Adds a new value to the end of the queue.
         """
-        if self._size == self._sa.size():  # If the queue is full, resize
+        if self._current_size == self._sa.length():  # If the queue is full, resize
             self._double_queue()
+        self._back = self._increment(self._back)  # Update back pointer
         self._sa[self._back] = value
-        self._back = (self._back + 1) % self._sa.size()  # Update back pointer
-        self._size += 1
-
+        self._current_size += 1
 
     def dequeue(self) -> object:
         """
@@ -105,8 +104,8 @@ class Queue:
         if self.is_empty():
             raise QueueException("Queue is empty")
         value = self._sa[self._front]
-        self._front = (self._front + 1) % self._sa.size()  # Update front pointer
-        self._size -= 1
+        self._front = (self._front + 1) % self._sa._size  # Update front pointer
+        self._current_size -= 1
         return value
 
 
@@ -126,13 +125,13 @@ class Queue:
         """
         Doubles the capacity of the queue.
         """
-        new_capacity = 2 * self._sa.size()
+        new_capacity = 2 * self._sa._size
         new_sa = StaticArray(new_capacity)
-        for i in range(self._size):
-            new_sa[i] = self._sa[(self._front + i) % self._sa.size()]
+        for i in range(self._current_size):
+            new_sa[i] = self._sa[(self._front + i) % self._sa._size]
         self._sa = new_sa
         self._front = 0
-        self._back = self._size
+        self._back = self._current_size
 
 
 # ------------------- BASIC TESTING -----------------------------------------
