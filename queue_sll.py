@@ -63,18 +63,19 @@ class Queue:
 
     def enqueue(self, value: object) -> None:
         """
-        Add a new value to the end of the queue.
+        Adds a new value to the end of the queue.
         """
         new_node = SLNode(value)
         if self.is_empty():
             self._head = new_node
+            self._tail = new_node
         else:
             self._tail.next = new_node
-        self._tail = new_node
+            self._tail = new_node
 
     def dequeue(self) -> object:
         """
-        Remove and return the value from the beginning of the queue.
+        Removes and returns the value from the beginning of the queue.
         Raise QueueException if the queue is empty.
         """
         if self.is_empty():
@@ -84,7 +85,6 @@ class Queue:
         if self._head is None:
             self._tail = None
         return value
-
 
     def front(self) -> object:
         """
