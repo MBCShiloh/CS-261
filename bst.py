@@ -335,7 +335,7 @@ class BST:
         """
         Removes all of the nodes from the tree. It must be implemented with O(1) runtime complexity.
         """
-        self.root = None
+        self._root = None
 
 
 # ------------------- BASIC TESTING -----------------------------------------
