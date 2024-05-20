@@ -1,9 +1,9 @@
-# Name:
-# OSU Email:
-# Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Name:Mark Bastion-Cavnar
+# # OSU Email: bastionm@oregonstate.edu
+# # Course: CS261 - Data Structures
+# # Assignment: 4 BST and AVL implementation
+# # Due Date: 5/19/2024
+# # Description: BST implementation
 
 
 import random
@@ -154,15 +154,60 @@ class BST:
 
     def add(self, value: object) -> None:
         """
-        TODO: Write your implementation
+        Adds a new value to the tree. Duplicate values are allowed. If a node with that
+        value is already in the tree, the new value should be added to the right subtree of that node.
         """
-        pass
+        if not self._root:
+            self._root = BSTNode(value)
+        else:
+            self._add(self._root, value)
+
+    def _add(self, node: BSTNode, value: object) -> None:
+        if value <= node.value:
+            if node.left is None:
+                node.left = BSTNode(value)
+            else:
+                self._add(node.left, value)
+        else:
+            if node.right is None:
+                node.right = BSTNode(value)
+            else:
+                self._add(node.right, value)
 
     def remove(self, value: object) -> bool:
         """
-        TODO: Write your implementation
+        Removes a value from the tree. Returns True if the value was found and removed,
+        False otherwise.
         """
-        pass
+        self._root, removed = self._remove(self._root, value)
+        return removed
+
+    def _remove(self, node: BSTNode, value: object):
+        if node is None:
+            return node, False
+
+        if value < node.value:
+            node.left, removed = self._remove(node.left, value)
+        elif value > node.value:
+            node.right, removed = self._remove(node.right, value)
+        else:
+            # Node with only one child or no child
+            if node.left is None:
+                return node.right, True
+            elif node.right is None:
+                return node.left, True
+            # Node with two children: Get the inorder successor (smallest in the right subtree)
+            min_larger_node = self._min_value_node(node.right)
+            node.value = min_larger_node.value
+            node.right, _ = self._remove(node.right, min_larger_node.value)
+            return node, True
+        return node, removed
+
+    def _min_value_node(self, node: BSTNode) -> BSTNode:
+        current = node
+        while current.left is not None:
+            current = current.left
+        return current
 
     # Consider implementing methods that handle different removal scenarios; #
     # you may find that you're able to use some of them in the AVL.          #
@@ -172,61 +217,124 @@ class BST:
 
     def _remove_no_subtrees(self, remove_parent: BSTNode, remove_node: BSTNode) -> None:
         """
-        TODO: Write your implementation
+        Remove node that has no subtrees (no left or right nodes)
         """
-        # remove node that has no subtrees (no left or right nodes)
-        pass
+        if remove_parent.left == remove_node:
+            remove_parent.left = None
+        else:
+            remove_parent.right = None
 
     def _remove_one_subtree(self, remove_parent: BSTNode, remove_node: BSTNode) -> None:
         """
-        TODO: Write your implementation
+        Remove node that has a left or right subtree (only)
         """
-        # remove node that has a left or right subtree (only)
-        pass
+        if remove_node.left:
+            child = remove_node.left
+        else:
+            child = remove_node.right
+
+        if remove_parent.left == remove_node:
+            remove_parent.left = child
+        else:
+            remove_parent.right = child
 
     def _remove_two_subtrees(self, remove_parent: BSTNode, remove_node: BSTNode) -> None:
         """
-        TODO: Write your implementation
+        Remove node that has two subtrees
         """
-        # remove node that has two subtrees
-        # need to find inorder successor and its parent (make a method!)
-        pass
+        # Get the inorder successor (smallest in the right subtree)
+        successor_parent = remove_node
+        successor = remove_node.right
+        while successor.left:
+            successor_parent = successor
+            successor = successor.left
+
+        # Replace value of remove_node with the successor's value
+        remove_node.value = successor.value
+
+        # Fix the successor's parent's child
+        if successor_parent.left == successor:
+            successor_parent.left = successor.right
+        else:
+            successor_parent.right = successor.right
 
     def contains(self, value: object) -> bool:
         """
-        TODO: Write your implementation
+        Returns True if the value is in the tree. Otherwise, it returns False. If the tree is
+        empty, the method should return False. It must be implemented with O(N) runtime complexity.
         """
-        pass
+        return self._contains(self.root, value)
+
+    def contains(self, value: object) -> bool:
+        """
+        Returns True if the value is in the tree, False otherwise.
+        """
+        return self._contains(self._root, value)
+
+    def _contains(self, node: BSTNode, value: object) -> bool:
+        if node is None:
+            return False
+        if value == node.value:
+            return True
+        elif value < node.value:
+            return self._contains(node.left, value)
+        else:
+            return self._contains(node.right, value)
 
     def inorder_traversal(self) -> Queue:
         """
-        TODO: Write your implementation
+        Returns a queue with the values of the tree in inorder.
         """
-        pass
+        queue = Queue()
+        self._inorder_traversal(self._root, queue)
+        return queue
+
+    def _inorder_traversal(self, node: BSTNode, queue: Queue) -> None:
+        if node is not None:
+            self._inorder_traversal(node.left, queue)
+            queue.enqueue(node.value)
+            self._inorder_traversal(node.right, queue)
 
     def find_min(self) -> object:
         """
-        TODO: Write your implementation
+        Returns the lowest value in the tree. If the tree is empty, the method should return None.
+        It must be implemented with O(1) runtime complexity.
         """
-        pass
+        if self._root is None:
+            return None
+        return self._min_value_node(self._root).value
+
+    def _min_value_node(self, node: BSTNode) -> BSTNode:
+        current = node
+        while current.left is not None:
+            current = current.left
+        return current
+
 
     def find_max(self) -> object:
         """
-        TODO: Write your implementation
+        Returns the highest value in the tree. If the tree is empty, the method should return None.
+        It must be implemented with O(1) runtime complexity.
         """
-        pass
+        if self._root is None:
+            return None
+        current = self._root
+        while current.right is not None:
+            current = current.right
+        return current.value
 
     def is_empty(self) -> bool:
         """
-        TODO: Write your implementation
+        Returns True if the tree is empty. Otherwise, it returns False.
+        It must be implemented with O(1) runtime complexity.
         """
-        pass
+        return self._root is None
 
     def make_empty(self) -> None:
         """
-        TODO: Write your implementation
+        Removes all of the nodes from the tree. It must be implemented with O(1) runtime complexity.
         """
-        pass
+        self.root = None
 
 
 # ------------------- BASIC TESTING -----------------------------------------
