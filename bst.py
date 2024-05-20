@@ -163,16 +163,17 @@ class BST:
             self._add(self._root, value)
 
     def _add(self, node: BSTNode, value: object) -> None:
-        if value <= node.value:
+        if value < node.value:  # Changed to strictly less than
             if node.left is None:
                 node.left = BSTNode(value)
             else:
                 self._add(node.left, value)
-        else:
+        else:  # All values >= node.value will go to the right
             if node.right is None:
                 node.right = BSTNode(value)
             else:
                 self._add(node.right, value)
+
 
     def remove(self, value: object) -> bool:
         """
