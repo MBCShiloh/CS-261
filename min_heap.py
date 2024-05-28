@@ -1,9 +1,9 @@
-# Name:
-# OSU Email:
+# Name: Mark Bastion-Cavnar
+# OSU Email: bastionm@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment: 8
+# Due Date:5/28/2024
+# Description: min heap implementation
 
 
 from dynamic_array import *
@@ -41,52 +41,169 @@ class MinHeap:
 
     def add(self, node: object) -> None:
         """
-        TODO: Write this implementation
+        Add a new element to the heap.
         """
-        pass
+        # Append the node to the end of the heap array.
+        self._heap.append(node)
+
+        # Initialize currentIndex as the index of the newly added node (last index of the array).
+        currentIndex = self._heap.length() - 1
+
+        # While currentIndex is not the root index:
+        while currentIndex > 0:
+            # Calculate parentIndex as (currentIndex - 1) // 2.
+            parentIndex = (currentIndex - 1) // 2
+
+            # If the value at parentIndex is less than or equal to the value at currentIndex:
+            if self._heap.get_at_index(parentIndex) <= self._heap.get_at_index(currentIndex):
+                # Break the loop (heap property is maintained).
+                break
+
+            # Swap the values at currentIndex and parentIndex.
+            parent_value = self._heap.get_at_index(parentIndex)
+            current_value = self._heap.get_at_index(currentIndex)
+            self._heap.set_at_index(currentIndex, parent_value)
+            self._heap.set_at_index(parentIndex, current_value)
+
+            # Update currentIndex to parentIndex (move up in the heap).
+            currentIndex = parentIndex
 
     def is_empty(self) -> bool:
         """
-        TODO: Write this implementation
+        Check if the heap is empty.
         """
-        pass
+        return self._heap.length() == 0
 
     def get_min(self) -> object:
         """
-        TODO: Write this implementation
+        Get the minimum element in the heap.
+        Raises MinHeapException if the heap is empty.
         """
-        pass
+        if self.is_empty():
+            raise MinHeapException("Heap is empty")
+        return self._heap.get_at_index(0)
 
     def remove_min(self) -> object:
         """
-        TODO: Write this implementation
+        Remove and return the minimum element in the heap.
+        Raises MinHeapException if the heap is empty.
         """
-        pass
+        if self.is_empty():
+            raise MinHeapException("Heap is empty")
+        min_value = self._heap.get_at_index(0)
+        last_index = self._heap.length() - 1
+        if last_index > 0:
+            last_value = self._heap.get_at_index(last_index)
+            self._heap.set_at_index(0, last_value)
+        self._heap.remove_at_index(last_index)
+        if self._heap.length() > 0:
+            self._percolate_down(0)
+        return min_value
+
+    def _percolate_down(self, index: int) -> None:
+        """
+        Helper function to percolate an element down the heap to maintain the heap property.
+        """
+        child_index = 2 * index + 1
+        value = self._heap.get_at_index(index)
+        while child_index < self._heap.length():
+            min_value = value
+            min_index = -1
+            for i in range(2):
+                if child_index + i < self._heap.length():
+                    if self._heap.get_at_index(child_index + i) < min_value:
+                        min_value = self._heap.get_at_index(child_index + i)
+                        min_index = child_index + i
+            if min_value == value:
+                return
+            else:
+                self._heap.set_at_index(index, min_value)
+                self._heap.set_at_index(min_index, value)
+                index = min_index
+                child_index = 2 * index + 1
 
     def build_heap(self, da: DynamicArray) -> None:
         """
-        TODO: Write this implementation
+        This method receives a DynamicArray with objects in any order, and builds a proper
+        MinHeap from them. The current content of the MinHeap is overwritten.
+        The runtime complexity of this implementation must be amortized O(N). If the runtime
+        complexity is amortized O(N log N), you will not receive any points for this portion of the
+        assignment, even if your method passes Gradescope.
         """
-        pass
+        # Step 1: Copy the elements from da into the heap’s internal array to ensure they are not referencing the same object.
+        self._heap = DynamicArray()
+        for i in range(da.length()):
+            self._heap.append(da.get_at_index(i))
+
+        # Step 2: Find the index of the last parent node.
+        lastParentIndex = (self._heap.length() // 2) - 1
+
+        # Step 3: For each node starting from lastParentIndex down to 0 (inclusive):
+        for index in range(lastParentIndex, -1, -1):
+            self._percolate_down(index)
 
     def size(self) -> int:
         """
-        TODO: Write this implementation
+        This method returns the number of items currently stored in the heap.
+        The runtime complexity of this implementation must be O(1).
         """
-        pass
+        # Return the length of the heap's internal array.
+        return self._heap.length()
 
     def clear(self) -> None:
         """
-        TODO: Write this implementation
+        This method removes all items from the heap.
         """
-        pass
+        self._heap = DynamicArray()
 
 
-def heapsort(da: DynamicArray) -> None:
+def heapsort(arr: DynamicArray) -> None:
     """
-    TODO: Write this implementation
+    Sort the elements of the DynamicArray in non-ascending order using the Heapsort algorithm.
     """
-    pass
+
+    def percolate_down(arr: DynamicArray, parent: int, size: int) -> None:
+        """
+        Helper function to percolate an element down the heap to maintain the heap property.
+        """
+        child_index = 2 * parent + 1
+        value = arr.get_at_index(parent)
+
+        while child_index < size:
+            max_value = value
+            max_index = -1
+            for i in range(2):  # Check both the left and right child
+                if child_index + i < size:
+                    if arr.get_at_index(child_index + i) > max_value:
+                        max_value = arr.get_at_index(child_index + i)
+                        max_index = child_index + i
+            if max_value == value:
+                return
+            else:
+                arr.set_at_index(parent, max_value)
+                arr.set_at_index(max_index, value)
+                parent = max_index
+                child_index = 2 * parent + 1
+
+    # Step 1: Convert arr into a max heap
+    last_parent_index = (arr.length() // 2) - 1
+    for index in range(last_parent_index, -1, -1):
+        percolate_down(arr, index, arr.length())
+
+    # Step 2: For each element in arr starting from the last element down to the second element
+    for end_index in range(arr.length() - 1, 0, -1):
+        # Swap the first element with the current element
+        arr.set_at_index(0, arr.get_at_index(end_index))
+        arr.set_at_index(end_index, value)
+
+        # Reduce the size of the heap by one
+        size = end_index
+
+        # Apply percolate_down from the root to the new size of the heap
+        percolate_down(arr, 0, size)
+
+    # Step 3: The array is now sorted in non-ascending order
+
 
 
 # It's highly recommended that you implement the following optional          #
