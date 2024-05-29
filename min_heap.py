@@ -193,8 +193,10 @@ def heapsort(arr: DynamicArray) -> None:
     # Step 2: For each element in arr starting from the last element down to the second element
     for end_index in range(arr.length() - 1, 0, -1):
         # Swap the first element with the current element
-        arr.set_at_index(0, arr.get_at_index(end_index))
-        arr.set_at_index(end_index, value)
+        first_value = arr.get_at_index(0)
+        end_value = arr.get_at_index(end_index)
+        arr.set_at_index(0, end_value)
+        arr.set_at_index(end_index, first_value)
 
         # Reduce the size of the heap by one
         size = end_index
@@ -203,7 +205,6 @@ def heapsort(arr: DynamicArray) -> None:
         percolate_down(arr, 0, size)
 
     # Step 3: The array is now sorted in non-ascending order
-
 
 
 # It's highly recommended that you implement the following optional          #
