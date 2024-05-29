@@ -204,8 +204,6 @@ def heapsort(arr: DynamicArray) -> None:
         # Apply percolate_down from the root to the new size of the heap
         percolate_down(arr, 0, size)
 
-    # Step 3: The array is now sorted in non-ascending order
-
 
 # It's highly recommended that you implement the following optional          #
 # helper function for percolating elements down the MinHeap. You can call    #
