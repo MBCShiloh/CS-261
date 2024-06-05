@@ -1,9 +1,9 @@
-# Name:
-# OSU Email:
+# Name: Mark Bastion-Cavnar
+# OSU Email: bastionm@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment 6:HashMap
+# Due Date:6/6/2024
+# Description: My submission for a Separate Chaining HashMap
 
 
 from a6_include import (DynamicArray, LinkedList,
@@ -90,66 +90,158 @@ class HashMap:
 
     def put(self, key: str, value: object) -> None:
         """
-        TODO: Write this implementation
+        Add a key-value pair to the hash map. If the key already exists,
+        update its value. Resize the table if the load factor is greater than or equal to 1.0.
         """
-        pass
+        index = self._hash_function(key) % self._capacity
+        bucket = self._buckets[index]
+
+        # Check if the key is already present and remove it if necessary
+        if bucket.contains(key):
+            bucket.remove(key)
+        else:
+            self._size += 1
+
+        # Insert the new key-value pair
+        bucket.insert(key, value)
+
+        # Resize the table if the load factor is greater than or equal to 1.0
+        if self.table_load() >= 1.0:
+            self.resize_table(self._capacity * 2)
 
     def resize_table(self, new_capacity: int) -> None:
         """
-        TODO: Write this implementation
+        Resize the hash table to a new capacity, rehashing all key-value pairs.
         """
-        pass
+        if new_capacity < 1:
+            return
+
+        new_capacity = self._next_prime(new_capacity)
+        new_buckets = DynamicArray()
+
+        for _ in range(new_capacity):
+            new_buckets.append(LinkedList())
+
+        for i in range(self._capacity):
+            current = self._buckets[i]._head  # Use '_head' instead of 'head'
+            while current:
+                index = self._hash_function(current.key) % new_capacity
+                new_buckets[index].insert(current.key, current.value)
+                current = current.next
+
+        self._buckets = new_buckets
+        self._capacity = new_capacity
 
     def table_load(self) -> float:
         """
-        TODO: Write this implementation
+        Return the current load factor of the table.
         """
-        pass
+        return self._size / self._capacity
 
     def empty_buckets(self) -> int:
         """
-        TODO: Write this implementation
+        Return the number of empty buckets in the hash map.
         """
-        pass
+        empty_count = 0
+        for i in range(self._capacity):
+            if self._buckets[i].length() == 0:
+                empty_count += 1
+        return empty_count
 
-    def get(self, key: str):
+    def get(self, key: str) -> object:
         """
-        TODO: Write this implementation
+        Retrieve the value associated with the given key. Return None if the key does not exist.
         """
-        pass
+        index = self._hash_function(key) % self._capacity
+        bucket = self._buckets[index]
+
+        node = bucket.contains(key)
+        if node:
+            return node.value
+        return None
 
     def contains_key(self, key: str) -> bool:
         """
-        TODO: Write this implementation
+        Check if the given key exists in the hash map.
         """
-        pass
+        index = self._hash_function(key) % self._capacity
+        bucket = self._buckets[index]
+
+        if bucket.contains(key):
+            return True
+        return False
 
     def remove(self, key: str) -> None:
         """
-        TODO: Write this implementation
+        Remove the key-value pair associated with the given key from the hash map.
         """
-        pass
+        index = self._hash_function(key) % self._capacity
+        bucket = self._buckets[index]
+
+        if bucket.contains(key):
+            bucket.remove(key)
+            self._size -= 1
 
     def get_keys_and_values(self) -> DynamicArray:
         """
-        TODO: Write this implementation
+        Return a DynamicArray containing all key-value pairs in the hash map.
         """
-        pass
+        result = DynamicArray()
+        for i in range(self._capacity):
+            current = self._buckets[i]._head  # Use '_head' instead of 'head'
+            while current:
+                result.append((current.key, current.value))
+                current = current.next
+        return result
 
     def clear(self) -> None:
         """
-        TODO: Write this implementation
+        Remove all key-value pairs from the hash map.
         """
-        pass
+        for i in range(self._capacity):
+            self._buckets[i] = LinkedList()
+        self._size = 0
 
 
-def find_mode(da: DynamicArray) -> tuple[DynamicArray, int]:
+def find_mode(arr: DynamicArray) -> tuple[DynamicArray, int]:
     """
-    TODO: Write this implementation
+    Find the mode(s) in the given DynamicArray. Return a tuple containing a
+    DynamicArray of the mode(s) and their frequency.
     """
-    # if you'd like to use a hash map,
-    # use this instance of your Separate Chaining HashMap
-    map = HashMap()
+    hash_map = HashMap()
+    max_frequency = 0
+    mode_array = DynamicArray()
+
+    # Count the frequency of each element in the array
+    for i in range(arr.length()):
+        value = arr[i]
+        frequency = hash_map.get(value)
+        if frequency is None:
+            hash_map.put(value, 1)
+            frequency = 1
+        else:
+            hash_map.put(value, frequency + 1)
+            frequency += 1
+
+        if frequency > max_frequency:
+            max_frequency = frequency
+
+    # Find all elements with the highest frequency
+    for i in range(arr.length()):
+        value = arr[i]
+        if hash_map.get(value) == max_frequency:
+            # Check if the value is already in the mode_array
+            already_in_array = False
+            for j in range(mode_array.length()):
+                if mode_array[j] == value:
+                    already_in_array = True
+                    break
+            if not already_in_array:
+                mode_array.append(value)
+
+    return mode_array, max_frequency
+
+
 
 
 # ------------------- BASIC TESTING ---------------------------------------- #
