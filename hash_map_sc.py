@@ -157,6 +157,7 @@ class HashMap:
         # Update the hash map with the new buckets and capacity
         self._buckets = new_buckets
         self._capacity = new_capacity
+
         # Debug print to verify resizing
         print(f"Resized table to new capacity: {self._capacity}, number of items: {self._size}")
 
