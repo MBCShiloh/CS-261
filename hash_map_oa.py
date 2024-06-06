@@ -119,7 +119,6 @@ class HashMap:
 
         # Create a new dynamic array for the resized hash table
         new_table = DynamicArray()
-
         for _ in range(new_capacity):
             new_table.append(None)
 
