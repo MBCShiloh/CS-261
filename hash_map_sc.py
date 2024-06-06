@@ -135,6 +135,7 @@ class HashMap:
         """
         Resize the hash table to a new capacity, rehashing all key-value pairs.
         """
+        # Ensure the new capacity is not less than 1
         if new_capacity < 1:
             return
 
@@ -150,7 +151,9 @@ class HashMap:
         for i in range(self._capacity):
             current = self._buckets[i]._head
             while current:
+                # Calculate the new bucket index using the new capacity
                 index = self._hash_function(current.key) % new_capacity
+                # Insert the key-value pair into the new bucket
                 new_buckets[index].insert(current.key, current.value)
                 current = current.next
 
