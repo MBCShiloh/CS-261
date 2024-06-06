@@ -116,12 +116,15 @@ class HashMap:
         if new_capacity < 1:
             return
 
+        # Ensure the new capacity is a prime number
         new_capacity = self._next_prime(new_capacity)
         new_buckets = DynamicArray()
 
+        # Initialize new buckets
         for _ in range(new_capacity):
             new_buckets.append(LinkedList())
 
+        # Rehash all key-value pairs into the new buckets
         for i in range(self._capacity):
             current = self._buckets[i]._head
             while current:
@@ -129,6 +132,7 @@ class HashMap:
                 new_buckets[index].insert(current.key, current.value)
                 current = current.next
 
+        # Update the hash map with the new buckets and capacity
         self._buckets = new_buckets
         self._capacity = new_capacity
 
