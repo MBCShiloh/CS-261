@@ -135,9 +135,8 @@ class HashMap:
         """
         Resize the hash table to a new capacity, rehashing all key-value pairs.
         """
-        # Ensure new_capacity is a positive number and at least the number of items in the hash map
-        if new_capacity < self._size:
-            new_capacity = self._size
+        if new_capacity < 1:
+            return
 
         # Ensure the new capacity is a prime number
         new_capacity = self._next_prime(new_capacity)
@@ -158,7 +157,6 @@ class HashMap:
         # Update the hash map with the new buckets and capacity
         self._buckets = new_buckets
         self._capacity = new_capacity
-
         # Debug print to verify resizing
         print(f"Resized table to new capacity: {self._capacity}, number of items: {self._size}")
 
