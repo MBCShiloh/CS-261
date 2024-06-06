@@ -135,8 +135,9 @@ class HashMap:
         """
         Resize the hash table to a new capacity, rehashing all key-value pairs.
         """
-        if new_capacity < 1:
-            return
+        # Ensure new_capacity is large enough to hold existing items
+        if new_capacity < self._size:
+            new_capacity = self._size
 
         # Ensure the new capacity is a prime number
         new_capacity = self._next_prime(new_capacity)
