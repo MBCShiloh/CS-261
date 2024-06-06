@@ -139,8 +139,8 @@ class HashMap:
         if new_capacity < self._size:
             new_capacity = self._size
 
-        # Ensure the new capacity is a prime number
-        new_capacity = self._next_prime(new_capacity)
+        # Ensure the new capacity is a positive number and a prime number
+        new_capacity = self._next_prime(max(new_capacity, 2))
         new_buckets = DynamicArray()
 
         # Initialize new buckets
@@ -159,8 +159,7 @@ class HashMap:
         self._buckets = new_buckets
         self._capacity = new_capacity
 
-        # Debug print to verify resizing
-        print(f"Resized table to new capacity: {self._capacity}, number of items: {self._size}")
+        
 
     def table_load(self) -> float:
         """
