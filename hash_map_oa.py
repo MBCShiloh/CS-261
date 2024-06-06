@@ -109,34 +109,22 @@ class HashMap:
         self._size += 1
 
     def resize_table(self, new_capacity: int) -> None:
-        # Ensure new_capacity is a prime number and large enough
         if new_capacity < self._size:
-            new_capacity = self._next_prime(self._size * 2)
-        else:
-            new_capacity = self._next_prime(new_capacity)
+            return
 
-        # Create a new dynamic array for the resized hash table
-        new_table = DynamicArray()
+        new_capacity = self._next_prime(new_capacity)
+
+        old_buckets = self._buckets
+        self._buckets = DynamicArray()
         for _ in range(new_capacity):
-            new_table.append(None)
-
-        # Rehash all non-tombstone entries into the new table
-        for i in range(self._capacity):
-            if self._buckets[i] is not None and not self._buckets[i].is_tombstone:
-                key, value = self._buckets[i].key, self._buckets[i].value
-                index = self._hash_function(key) % new_capacity
-                j = 1
-
-                # Find the correct position for the rehashed key using quadratic probing
-                while new_table[index] is not None:
-                    index = (index + j * j) % new_capacity
-                    j += 1
-
-                new_table[index] = HashEntry(key, value)
-
-        # Update the table to the new table and capacity
-        self._buckets = new_table
+            self._buckets.append(None)
         self._capacity = new_capacity
+        self._size = 0
+
+        for i in range(old_buckets.length()):
+            entry = old_buckets[i]
+            if entry is not None and not entry.is_tombstone:
+                self.put(entry.key, entry.value)
 
     def table_load(self) -> float:
         """
