@@ -135,12 +135,12 @@ class HashMap:
         """
         Resize the hash table to a new capacity, rehashing all key-value pairs.
         """
-        # Ensure new_capacity is greater than or equal to the number of items in the hash map
+        # Ensure new_capacity is a positive number and at least the number of items in the hash map
         if new_capacity < self._size:
             new_capacity = self._size
 
-        # Ensure the new capacity is a positive number and a prime number
-        new_capacity = self._next_prime(max(new_capacity, 2))
+        # Ensure the new capacity is a prime number
+        new_capacity = self._next_prime(new_capacity)
         new_buckets = DynamicArray()
 
         # Initialize new buckets
@@ -159,7 +159,8 @@ class HashMap:
         self._buckets = new_buckets
         self._capacity = new_capacity
 
-        
+        # Debug print to verify resizing
+        print(f"Resized table to new capacity: {self._capacity}, number of items: {self._size}")
 
     def table_load(self) -> float:
         """
