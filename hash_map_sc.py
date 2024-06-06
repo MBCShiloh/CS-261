@@ -123,7 +123,7 @@ class HashMap:
             new_buckets.append(LinkedList())
 
         for i in range(self._capacity):
-            current = self._buckets[i]._head  # Use '_head' instead of 'head'
+            current = self._buckets[i]._head
             while current:
                 index = self._hash_function(current.key) % new_capacity
                 new_buckets[index].insert(current.key, current.value)
@@ -136,6 +136,8 @@ class HashMap:
         """
         Return the current load factor of the table.
         """
+        if self._capacity == 0:  # Prevent division by zero
+            return 0
         return self._size / self._capacity
 
     def empty_buckets(self) -> int:
