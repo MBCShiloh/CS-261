@@ -109,13 +109,8 @@ class HashMap:
         self._size += 1
 
     def resize_table(self, new_capacity: int) -> None:
-        # Check if the new capacity is less than the number of elements in the hash map
-        if new_capacity < self._size:
-            return
-
         # Ensure new_capacity is a prime number
-        if not self._is_prime(new_capacity):
-            new_capacity = self._next_prime(new_capacity)
+        new_capacity = self._next_prime(new_capacity)
 
         # Create a new dynamic array for the resized hash table
         new_table = DynamicArray()
