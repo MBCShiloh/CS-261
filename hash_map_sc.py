@@ -132,33 +132,34 @@ class HashMap:
         return empty_count
 
     def resize_table(self, new_capacity: int) -> None:
-        """
-        Resize the hash table to a new capacity, rehashing all key-value pairs.
-        """
-        if new_capacity < 1:
-            return
+    """
+    Resize the hash table to a new capacity, rehashing all key-value pairs.
+    """
+    if new_capacity < 1:
+        return
 
-        # Ensure the new capacity is a prime number
-        new_capacity = self._next_prime(new_capacity)
-        new_buckets = DynamicArray()
+    # Ensure the new capacity is a prime number
+    new_capacity = self._next_prime(new_capacity)
+    new_buckets = DynamicArray()
 
-        # Initialize new buckets
-        for _ in range(new_capacity):
-            new_buckets.append(LinkedList())
+    # Initialize new buckets
+    for _ in range(new_capacity):
+        new_buckets.append(LinkedList())
 
-        # Rehash all key-value pairs into the new buckets
-        for i in range(self._capacity):
-            current = self._buckets[i]._head
-            while current:
-                index = self._hash_function(current.key) % new_capacity
-                new_buckets[index].insert(current.key, current.value)
-                current = current.next
+    # Rehash all key-value pairs into the new buckets
+    for i in range(self._capacity):
+        current = self._buckets[i]._head
+        while current:
+            index = self._hash_function(current.key) % new_capacity
+            new_buckets[index].insert(current.key, current.value)
+            current = current.next
 
-        # Update the hash map with the new buckets and capacity
-        self._buckets = new_buckets
-        self._capacity = new_capacity
-        # Debug print to verify resizing
-        print(f"Resized table to new capacity: {self._capacity}, number of items: {self._size}")
+    # Update the hash map with the new buckets and capacity
+    self._buckets = new_buckets
+    self._capacity = new_capacity
+
+    # Debug print to verify resizing
+    print(f"Resized table to new capacity: {self._capacity}, number of items: {self._size}")
 
     def table_load(self) -> float:
         """
