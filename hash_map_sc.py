@@ -105,9 +105,31 @@ class HashMap:
         # Insert the new key-value pair
         bucket.insert(key, value)
 
+        # Debug print to verify the put operation
+        print(f"Put: ({key}, {value}) into bucket index {index}")
+
         # Resize the table if the load factor is greater than or equal to 1.0
         if self.table_load() >= 1.0:
+            print(f"Load factor >= 1.0, resizing table. Current load factor: {self.table_load()}")
             self.resize_table(self._capacity * 2)
+
+    def table_load(self) -> float:
+        """
+        Return the current load factor of the table.
+        """
+        if self._capacity == 0:  # Prevent division by zero
+            return 0
+        return self._size / self._capacity
+
+    def empty_buckets(self) -> int:
+        """
+        Return the number of empty buckets in the hash map.
+        """
+        empty_count = 0
+        for i in range(self._capacity):
+            if self._buckets[i].length() == 0:
+                empty_count += 1
+        return empty_count
 
     def resize_table(self, new_capacity: int) -> None:
         """
@@ -135,6 +157,8 @@ class HashMap:
         # Update the hash map with the new buckets and capacity
         self._buckets = new_buckets
         self._capacity = new_capacity
+        # Debug print to verify resizing
+        print(f"Resized table to new capacity: {self._capacity}, number of items: {self._size}")
 
     def table_load(self) -> float:
         """
