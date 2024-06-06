@@ -135,7 +135,7 @@ class HashMap:
         """
         Resize the hash table to a new capacity, rehashing all key-value pairs.
         """
-        # Ensure new_capacity is large enough to hold existing items
+        # Ensure new_capacity is greater than or equal to the number of items in the hash map
         if new_capacity < self._size:
             new_capacity = self._size
 
