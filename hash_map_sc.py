@@ -216,6 +216,11 @@ class HashMap:
             bucket.remove(key)
             self._size -= 1
 
+            # Debug print to verify the remove operation
+            print(f"Removed: {key} from bucket index {index}")
+
+        
+
     def get_keys_and_values(self) -> DynamicArray:
         """
         Return a DynamicArray containing all key-value pairs in the hash map.
