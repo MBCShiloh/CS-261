@@ -110,8 +110,6 @@ class HashMap:
         # Insert the new key-value pair
         bucket.insert(key, value)
 
-        # Debug print to verify the put operation
-        print(f"Put: ({key}, {value}) into bucket index {index}")
 
     def table_load(self) -> float:
         """
