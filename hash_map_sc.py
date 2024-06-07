@@ -219,7 +219,7 @@ class HashMap:
             # Debug print to verify the remove operation
             print(f"Removed: {key} from bucket index {index}")
 
-        
+    
 
     def get_keys_and_values(self) -> DynamicArray:
         """
