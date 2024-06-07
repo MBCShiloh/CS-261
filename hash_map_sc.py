@@ -91,7 +91,7 @@ class HashMap:
     def put(self, key: str, value: object) -> None:
         """
         Add a key-value pair to the hash map. If the key already exists,
-        update its value. Resize the table if the load factor is greater than or equal to 1.0.
+        update its value. Resize the table if the load factor is greater than or equal to 0.5.
         """
         index = self._hash_function(key) % self._capacity
         bucket = self._buckets[index]
@@ -108,9 +108,9 @@ class HashMap:
         # Debug print to verify the put operation
         print(f"Put: ({key}, {value}) into bucket index {index}")
 
-        # Resize the table if the load factor is greater than or equal to 1.0
-        if self.table_load() >= 1.0:
-            print(f"Load factor >= 1.0, resizing table. Current load factor: {self.table_load()}")
+        # Resize the table if the load factor is greater than or equal to 0.5
+        if self.table_load() >= 0.5:
+            print(f"Load factor >= 0.5, resizing table. Current load factor: {self.table_load()}")
             self.resize_table(self._capacity * 2)
 
     def table_load(self) -> float:
@@ -135,34 +135,23 @@ class HashMap:
         """
         Resize the hash table to a new capacity, rehashing all key-value pairs.
         """
-        # Ensure the new capacity is not less than 1
-        if new_capacity < 1:
+        if new_capacity < 1:  # if new_capacity <1, do nothing.
             return
 
-        # Ensure the new capacity is a prime number
-        new_capacity = self._next_prime(new_capacity)
-        new_buckets = DynamicArray()
-
-        # Initialize new buckets
-        for _ in range(new_capacity):
-            new_buckets.append(LinkedList())
-
-        # Rehash all key-value pairs into the new buckets
-        for i in range(self._capacity):
-            current = self._buckets[i]._head
-            while current:
-                # Calculate the new bucket index using the new capacity
-                index = self._hash_function(current.key) % new_capacity
-                # Insert the key-value pair into the new bucket
-                new_buckets[index].insert(current.key, current.value)
-                current = current.next
-
-        # Update the hash map with the new buckets and capacity
-        self._buckets = new_buckets
+        if self._is_prime(new_capacity) is False:  # need to check if new_capacity is a prime# first.
+            new_capacity = self._next_prime(new_capacity)  # if not, then update it.
         self._capacity = new_capacity
 
-        # Debug print to verify resizing
-        print(f"Resized table to new capacity: {self._capacity}, number of items: {self._size}")
+        copy_da = self._buckets  # create copy of current buckets
+        self._buckets = DynamicArray()  # reset buckets to blank
+        self._size = 0  # reset size to 0 (using put will increase size as need)
+
+        for x in range(self.get_capacity()):  # capacity remains the same,
+            self._buckets.append(LinkedList())  # iterate and append empty LL's to self._buckets
+        for x in range(copy_da.length()):  # We have to rehash all the hash table LL's.
+            copy_bucket_LL = copy_da[x]  # point to LL
+            for y in copy_bucket_LL:  # access the LL
+                self.put(y.key, y.value)  # put copy_da's LL nodes into the blank LL's within self._buckets
 
     def table_load(self) -> float:
         """
