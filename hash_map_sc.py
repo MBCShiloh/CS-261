@@ -93,6 +93,11 @@ class HashMap:
         Add a key-value pair to the hash map. If the key already exists,
         update its value. Resize the table if the load factor is greater than or equal to 1.0.
         """
+        # Resize the table if the load factor is greater than or equal to 1.0
+        if self.table_load() >= 1.0:
+            print(f"Load factor >= 1.0, resizing table. Current load factor: {self.table_load()}")
+            self.resize_table(self._capacity * 2)
+
         index = self._hash_function(key) % self._capacity
         bucket = self._buckets[index]
 
@@ -107,11 +112,6 @@ class HashMap:
 
         # Debug print to verify the put operation
         print(f"Put: ({key}, {value}) into bucket index {index}")
-
-        # Resize the table if the load factor is greater than or equal to 1.0
-        if self.table_load() >= 1.0:
-            print(f"Load factor >= 1.0, resizing table. Current load factor: {self.table_load()}")
-            self.resize_table(self._capacity * 2)
 
     def table_load(self) -> float:
         """
@@ -219,7 +219,7 @@ class HashMap:
             # Debug print to verify the remove operation
             print(f"Removed: {key} from bucket index {index}")
 
-    
+
 
     def get_keys_and_values(self) -> DynamicArray:
         """
